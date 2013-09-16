@@ -4,8 +4,8 @@ The Shareable Directive provides Facebook and Twitter sharing icons for your blo
 
 To add shareable to your templates, declare it as an element, and set the `shareable-facebook` or `shareable-twitter` attributes:
 
-<shareable shareable-facebook shareable-twitter></shareable>
+`<shareable shareable-facebook shareable-twitter></shareable>`
 
 These default to using the Font-Awesome Facebook and Twitter icons, but you can also specify images to use instead:
 
-<shareable shareable-facebook="https://static.hubspot.com/final/img/common/icons/social/facebook-24x24.png" shareable-twitter="https://static.hubspot.com/final/img/common/icons/social/twitter-24x24.png"></shareable>
+`<shareable shareable-facebook="https://static.hubspot.com/final/img/common/icons/social/facebook-24x24.png" shareable-twitter="https://static.hubspot.com/final/img/common/icons/social/twitter-24x24.png"></shareable>`
