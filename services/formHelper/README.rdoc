@@ -1,0 +1,22 @@
+= FormHelper
+
+The FormHelper service provides common methods for interactions with RESTful resources via forms. 
+
+FormHelper implements complete create and updatecontroller actions, validating the forms, $saving or $updating the resource, and calling whatever callback you require.
+
+  create(form, model, callback() {
+    // Your awesome callback here
+  });
+
+FormHelper also adds setDirty() and setPristine() to Angular versions before 1.1. It cannot fallback on Angular's default implementations of these methods if they exist, because they are implemented improperly in some versions pre-1.1. You should only rely on these methods if you're working with a verison of Angular before 1.1 (though the current stable versions are, so these methods should be of some use).
+
+  setDirty(form);
+
+The `showError()` and `showSuccess()` methods are intended to be used in conjunction with `ng-show` to show error & success messages respectively.
+
+  <form name="MyGreatForm">
+    <input type="email" name="email"
+    <div ng-show="showError(MyGreatForm.email)" class="alert alert-warning">
+      Please enter a valid email address
+    </div>
+  </form>
