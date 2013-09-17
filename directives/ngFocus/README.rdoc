@@ -1,0 +1,9 @@
+== NgFocus
+
+For custom validations. NgFocus is available in unstable versions of Angular, but not in 1.0.8 (the latest stable release).
+
+Important!: This implementation of NgFocus relies on jQuery's focus event. You must include jQuery in your assets in order to use this directive.
+
+== Example Usage:
+
+`<input type="text" ng-focus="checkValidation()">`
