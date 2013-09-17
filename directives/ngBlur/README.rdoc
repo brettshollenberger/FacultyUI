@@ -1,0 +1,9 @@
+== NgBlur
+
+For custom validations. NgBlur is available in unstable versions of Angular, but not in 1.0.8 (the latest stable release).
+
+Important!: This implementation of NgBlur relies on jQuery's blur event. You must include jQuery in your assets in order to use this directive.
+
+== Example Usage:
+
+`<input type="text" ng-blur="checkValidation()">`
