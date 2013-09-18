@@ -1,10 +1,7 @@
 angular
   .module('app')
-  .factory('FormHelper', function($location) {
+  .factory('FormHelper', function($location, $anchorScroll) {
     var FormHelper = {
-      // Used in conjunction with ng-show to show error messages.
-      // We only want to show errors when the field has already been
-      // interacted with.
       showError: function(property) {
         return property.$invalid && property.$dirty;
       },
@@ -34,23 +31,26 @@ angular
           }
         }
       },
-      // We need to add all Angular validations here.
       validateForm: function(form) {
         var errors = [];
-        if (form.$error.required) {
-          errors.push("Please fill out all required fields.");
+        for (f in form) {
+          var field = form[f];
+          if (field.$error) {
+            errors.push(field.$name);
+          }
         }
-        if (form.$error.url) {
-          errors.push("Please enter a valid URL.");
-        }
-        if (form.$error.email) {
-          errors.push("Please enter a valid email address.");
-        }
+        // We can move to a particular error message, if desired,
+        // and if the field has an ID equal to its name attribute.
+        // $location.hash(errors[0]);
+
+        // Errors will display when the form fields are
+        // dirty an invalid. If a user has missed a field,
+        // the input will be invalid, but pristine. If we
+        // automatically set the whole field to dirty,
+        // the missed fields will be revealed.
         this.setDirty(form);
-        alert(errors.join("\n"));
+        $anchorScroll();
       },
-      // The full controller implementation of a create method used in conjuction
-      // with Angular's $resource service.
       create: function(form, model, callback) {
         if (form.$valid) {
           model.$save(function(resource) {
@@ -60,8 +60,6 @@ angular
           this.validateForm(form);
         }
       },
-      // The full controller implementation of an update method, also used in conjunction
-      // with Angular's $resource service.
       update: function(form, model, callback) {
         if (form.$valid) {
           model.$update(function(resource) {
