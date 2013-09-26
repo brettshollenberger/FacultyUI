@@ -31,6 +31,10 @@ angular
         phone: "Please enter a valid phone number."
       },
 
+      addValidationMessage: function(key, value) {
+        this.validationMessages[key] = value;
+      },
+
       setDirty: function(form) {
         for (var i in form) {
           var input = form[i];
@@ -195,4 +199,72 @@ angular
           formGroupCtrl.addField(element);
         }
       };
-    }]);
+    }])
+  .directive('simpleValidate', function () {
+
+  return {
+    restrict: 'A',
+    require: 'ngModel',
+    link: function (scope, elm, attrs, ctrl) {
+      var validateFn, watch, validators = {},
+        validateExpr = scope.$eval(attrs.simpleValidate);
+      console.log(scope.Validator);
+
+      Object.keys(validateExpr).forEach(function(key) {
+        if (!validateExpr[key]){ return;}
+
+        if (typeof scope.Validator === 'object') {
+          scope.Validator.addValidationMessage(key, validateExpr[key].message);
+        }
+
+        if (angular.isString(validateExpr[key].exp)) {
+          validateExpr[key] = validateExpr[key].exp;
+        }
+      });
+
+      angular.forEach(validateExpr, function (exprssn, key) {
+        validateFn = function (valueToValidate) {
+          var expression = scope.$eval(exprssn, { '$value' : valueToValidate });
+          if (angular.isFunction(expression.then)) {
+            // expression is a promise
+            expression.then(function(){
+              ctrl.$setValidity(key, true);
+            }, function(){
+              ctrl.$setValidity(key, false);
+            });
+            return valueToValidate;
+          } else if (expression) {
+            // expression is true
+            ctrl.$setValidity(key, true);
+            return valueToValidate;
+          } else {
+            // expression is false
+            ctrl.$setValidity(key, false);
+            return undefined;
+          }
+        };
+        validators[key] = validateFn;
+        ctrl.$formatters.push(validateFn);
+        ctrl.$parsers.push(validateFn);
+      });
+
+      // Support for ui-validate-watch
+      if (attrs.uiValidateWatch) {
+        watch = scope.$eval(attrs.uiValidateWatch);
+        if (angular.isString(watch)) {
+          scope.$watch(watch, function(){
+            angular.forEach(validators, function(validatorFn, key){
+              validatorFn(ctrl.$modelValue);
+            });
+          });
+        } else {
+          angular.forEach(watch, function(expression, key){
+            scope.$watch(expression, function(){
+              validators[key](ctrl.$modelValue);
+            });
+          });
+        }
+      }
+    }
+  };
+});
